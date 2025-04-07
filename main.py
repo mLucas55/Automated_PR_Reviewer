@@ -8,5 +8,6 @@ async def handle_webhook(request: Request):
     # verifies PR action is for new/updated code
     if payload.get("action") in ["opened", "synchronize"]:
         # Extract PR details and modified files here
+    
         print(payload)  
     return {"message": "Webhook received"}, 200

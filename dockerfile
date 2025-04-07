@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY requirements.txt .
 
+COPY . /app
+COPY private-key.pem /app/private-key.pem
+
 RUN pip install -r requirements.txt
 
 COPY main.py .
