@@ -3,6 +3,9 @@ import httpx
 from config import GITHUB_TOKEN
 import ollama
 
+import requests
+
+
 app = FastAPI()
 
 github_headers = {
@@ -17,14 +20,16 @@ def get_model_feedback(diff_content, commit_messages):
     prompt = "This is data from a Github pull request. It contains a diff file and a list of commit messages. Please review the code quality and generate a concise but effective comment. Keep in mind this comment will be posted to the pull request on Github: \n"
     payload = prompt + "\n" + combined_string + "\n" + diff_content
 
-    response = ollama.chat(
-        model="qwen2.5-coder:1.5b",
-        messages=[{"role": "user", 
-                   "content": payload}],
-        stream=False
-    )
-
-    return response
+    url = "http://ollama:11434/chat"
+    payload = {
+        "input": "Hello, how are you?",
+        "model": "qwen2.5-coder:1.5b"
+    }
+    response = requests.post(url, json=payload)
+    print("Response status code: ", response.status_code)
+    print("Response text: ", response.text)
+    
+    return data
 
 @app.post("/webhook")
 async def handle_webhook(request: Request):
