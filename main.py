@@ -15,7 +15,7 @@ def get_model_feedback(diff_content, commit_message):
     commit_message_with_prompt = "This is the commit message: " + commit_message
 
     prompt = "This is data from a Github pull request. It contains a diff file and a list of commit messages. Please review the code quality and generate a concise but effective comment. Keep in mind this comment will be posted to the pull request on Github: \n"
-    payload = prompt + "\n" + commit_message_with_prompt + "\n" + diff_content
+    #payload = prompt + "\n" + commit_message_with_prompt + "\n" + diff_content
 
     response = ollama.chat(
         model="qwen2.5-coder:1.5b",
