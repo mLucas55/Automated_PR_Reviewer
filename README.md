@@ -26,7 +26,7 @@ Powered by [Ollama](https://ollama.com) and integrated via webhooks, this tool b
 
 ---
 
-## 🏛️Architectural Overview
+## 🏛️ Architectural Overview
 
 ![PR-Review-Diagram](https://github.com/user-attachments/assets/ac3acde1-2f88-4dde-bcde-cc831d48a7db)
 
