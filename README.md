@@ -23,3 +23,10 @@ Powered by [Ollama](https://ollama.com) and integrated via webhooks, this tool b
    - The latest commit message
 3. A system prompt concatenated with the diff and commit messages and sent to the language model using Ollama.
 4. The generated review is sent back to the FastAPI app and posted as a comment on the pull request.
+
+---
+
+## 🏛️Architectural Overview
+
+![PR-Review-Diagram](https://github.com/user-attachments/assets/ac3acde1-2f88-4dde-bcde-cc831d48a7db)
+
