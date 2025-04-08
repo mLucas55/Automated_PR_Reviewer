@@ -9,7 +9,7 @@ services:
       - PRIVATE_KEY_PATH=${PRIVATE_KEY_PATH}
       - APP_ID=${APP_ID}
       - INSTALLATION_ID=${INSTALLATION_ID}
-      - OLLAMA_MODEL=${OLLAMA_MODEL:-codellama}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5-coder:1.5b}
       - OLLAMA_URL=http://ollama:11434
     depends_on:
       - ollama
