@@ -3,9 +3,6 @@ import httpx
 from config import GITHUB_TOKEN
 import ollama
 
-import requests
-
-
 app = FastAPI()
 
 github_headers = {
@@ -13,19 +10,17 @@ github_headers = {
     "Accept": "application/vnd.github.v3+json"
 }
 
-def get_model_feedback(diff_content, commit_messages):
+def get_model_feedback(diff_content, commit_message):
     
-    combined_string = "\n".join(commit_messages)
-    
-    prompt = "This is data from a Github pull request. It contains a diff file and a list of commit messages. Please review the code quality and generate a concise but effective comment. Keep in mind this comment will be posted to the pull request on Github: \n"
-    payload = prompt + "\n" + combined_string + "\n" + diff_content
+    commit_message_with_prompt = "This is the commit message: " + commit_message
 
-    print("YOU GOT THIS FAR")
+    prompt = "This is data from a Github pull request. It contains a diff file and a list of commit messages. Please review the code quality and generate a concise but effective comment. Keep in mind this comment will be posted to the pull request on Github: \n"
+    payload = prompt + "\n" + commit_message_with_prompt + "\n" + diff_content
 
     response = ollama.chat(
         model="qwen2.5-coder:1.5b",
         messages=[{"role": "user", 
-                    "content": "Hello How are you?"}],
+                    "content": prompt + diff_content}],
         stream=False
     )
     print(response.message['content']) # Print the response for debugging
@@ -51,29 +46,16 @@ async def handle_webhook(request: Request):
 
                 # Builds list of all commit messages
                 commit_messages = [commit["commit"]["message"] for commit in commits_data]
+                newest_commit_message = commit_messages[-1]
 
                 diff_url = payload["pull_request"]["diff_url"] # Standard unified diff format
-                #patch_url = payload["pull_request"]["patch_url"] # Email-style patch format
 
                 # Fetch the acual code
                 diff_response = await client.get(diff_url, headers=github_headers, follow_redirects=True)
                 diff_response.raise_for_status()
-                diff_content = diff_response.text #TODO should be a raw multi line diff file
+                diff_content = diff_response.text
 
-                automated_comment = get_model_feedback(diff_content, commit_messages)
-
-
-
-
-
-
-                ############# CHANGES STOP HERE ##############
-
-
-
-
-
-
+                automated_comment = get_model_feedback(diff_content, newest_commit_message)
 
                 # Add a comment to the PR
                 comments_url = f"https://api.github.com/repos/{repo_name}/issues/{pr_number}/comments"
@@ -89,7 +71,6 @@ async def handle_webhook(request: Request):
                 print(f"Comment added: {comment_response.status_code}")
                 
                 return {"message": "Webhook processed successfully, comment added"}
-                
                 
         except KeyError as e:
             raise HTTPException(status_code=400, detail=f"Invalid payload format: {str(e)}")
