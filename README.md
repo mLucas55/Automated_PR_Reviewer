@@ -21,7 +21,7 @@ Powered by [Ollama](https://ollama.com) and integrated via webhooks, this tool b
 2. The FastAPI app receives the webhook and extracts:
    - The diff of the PR
    - The latest commit message
-3. A system prompt concatenated with the diff and commit messages and sent to the language model using Ollama.
+3. A system prompt concatenated with the diff and commit messages are sent to the language model using Ollama.
 4. The generated review is sent back to the FastAPI app and posted as a comment on the pull request.
 
 ---
